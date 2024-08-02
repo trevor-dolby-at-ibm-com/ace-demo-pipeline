@@ -122,8 +122,8 @@ jobs:
           echo ========================================================================
           echo Logging in 
           echo ========================================================================
-          echo "${DOCKER_PASSWORD}" | crane auth login https://docker.io --username ${DOCKER_USERNAME} --password-stdin
-          echo "${CP_PASSWORD}" | crane auth login https://cp.icr.io --username ${CP_USERNAME} --password-stdin
+          echo "${DOCKER_PASSWORD}" | crane auth login docker.io --username ${DOCKER_USERNAME} --password-stdin
+          echo "${CP_PASSWORD}" | crane auth login cp.icr.io --username ${CP_USERNAME} --password-stdin
           echo ========================================================================
           echo Appending server contents tar file to create new image
           echo ========================================================================
