@@ -92,6 +92,7 @@ jobs:
         with:
           username: ${{ secrets.CP_USERNAME }}
           password: ${{ secrets.CP_PASSWORD }}
+          registry: cp.icr.io
 
       - name: Create container image
         run: |
