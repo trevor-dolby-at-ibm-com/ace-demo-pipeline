@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: cp.icr.io/cp/appc/ace:12.0.12.0-r1
+      credentials:
+        username: ${{ secrets.CP_USERNAME }}
+        password: ${{ secrets.CP_PASSWORD }}
       env:
         LICENSE: accept
       volumes:
