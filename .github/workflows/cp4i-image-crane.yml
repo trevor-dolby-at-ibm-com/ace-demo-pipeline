@@ -33,7 +33,7 @@ jobs:
           echo ========================================================================
           mkdir -p /usr/local/bin || /bin/true
           cd /usr/local/bin
-          curl https://github.com/google/go-containerregistry/releases/download/v0.20.1/go-containerregistry_Linux_x86_64.tar.gz | tar -xzvf -
+          curl --location -fs https://github.com/google/go-containerregistry/releases/download/v0.20.1/go-containerregistry_Linux_x86_64.tar.gz | tar -xzvf -
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
