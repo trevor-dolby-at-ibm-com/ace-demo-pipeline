@@ -85,6 +85,7 @@ jobs:
         run: |
           set -e # Fail on error
           cd /tmp && curl https://download.docker.com/linux/static/stable/x86_64/docker-27.1.1.tgz | tar -xzvf -
+          mv /tmp/docker/docker /usr/bin/docker
 
       - name: Login to cp.icr.io
         uses: docker/login-action@v2
@@ -104,4 +105,4 @@ jobs:
           
           cd /tmp/build
           chmod -R 777 .
-          /tmp/docker/docker build --file Dockerfile --build-arg BASE_IMAGE=cp.icr.io/cp/appc/ace-server-prod:12.0.12.0-r1-20240417-022324 -t tdolby/experimental:tea-github-action-$TAG .
+          docker build --file Dockerfile --build-arg BASE_IMAGE=cp.icr.io/cp/appc/ace-server-prod:12.0.12.0-r1-20240417-022324 -t tdolby/experimental:tea-github-action-$TAG .
