@@ -18,6 +18,11 @@ jobs:
         - /var/run/docker.sock:/var/run/docker.sock
       options: -u 0
     steps:
+      - name: Install git
+        shell: bash
+        run: |
+          microdnf install git -y
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
