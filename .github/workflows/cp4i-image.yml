@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: tdolby/experimental:ace-minimal-12.0.11.0-alpine
+      image: cp.icr.io/cp/appc/ace:12.0.12.0-r1
       env:
         LICENSE: accept
       volumes:
@@ -52,8 +52,3 @@ jobs:
           rm -rf /tmp/build
           mkdir -p /tmp/build
           cp tekton/Dockerfile /tmp/build/Dockerfile
-        
-      - name: Install docker
-        run: |
-          unset LD_LIBRARY_PATH || /bin/true
-          apk add docker
