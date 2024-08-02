@@ -63,6 +63,9 @@ jobs:
 
       - name: Create container image
         run: |
+          # checkout v4 does this and the removes it
+          git config --global --add safe.directory $PWD
+          
           export DATE=$(date '+%Y%m%d%H%M%S')
           export COMMIT=$(git log -1 --pretty=%h)
           export TAG="$DATE"-"$COMMIT"
