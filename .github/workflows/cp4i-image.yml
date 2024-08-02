@@ -122,4 +122,4 @@ jobs:
           echo ========================================================================
           echo Pushing container image
           echo ========================================================================
-          docker push tdolby/experimental:tea-github-action-$TAG .
+          docker push tdolby/experimental:tea-github-action-$TAG
