@@ -96,6 +96,11 @@ jobs:
           # Must have the full directory tree from / in the tar file
           tar -cvzf /tmp/build/crane-append-file.tar.gz home
 
+      - name: Install jq
+        shell: bash
+        run: |
+          microdnf install jq -y
+          
       - uses: imjasonh/setup-crane@v0.1
       - name: Create container image
         env:
