@@ -55,3 +55,10 @@ jobs:
           rm -rf /tmp/build
           mkdir -p /tmp/build
           cp tekton/Dockerfile /tmp/build/Dockerfile
+
+      - name: Create container image
+        run: |
+          export DATE=$(date '+%Y%m%d%H%M%S')
+          export COMMIT=$(git log -1 --pretty=%h)
+          export TAG="$DATE"-"$COMMIT"
+          echo Setting container tag to "$TAG"
