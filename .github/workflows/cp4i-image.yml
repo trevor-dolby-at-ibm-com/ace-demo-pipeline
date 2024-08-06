@@ -71,6 +71,11 @@ jobs:
           mqsibar -w /tmp/build/ace-server -a $PWD/tea-application-combined.bar
           ibmint optimize server --work-dir /tmp/build/ace-server
 
+          echo ========================================================================
+          echo Copy in Dcokerfile
+          echo ========================================================================
+          cp tekton/os/cp4i/Dockerfile /tmp/build
+
       - name: Install docker
         run: |
           set -e # Fail on error
