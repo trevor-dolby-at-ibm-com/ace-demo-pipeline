@@ -70,16 +70,6 @@ jobs:
           mqsicreateworkdir /tmp/build/ace-server
           mqsibar -w /tmp/build/ace-server -a $PWD/tea-application-combined.bar
           ibmint optimize server --work-dir /tmp/build/ace-server
-                    
-          echo ========================================================================
-          echo Copy in various startup files
-          echo ========================================================================
-          cp $PWD/demo-infrastructure/TEAJDBC.policyxml /tmp/build/ace-server/
-          cp $PWD/demo-infrastructure/application-overrides.txt /tmp/build/ace-server/
-          cp $PWD/demo-infrastructure/init-creds.sh /tmp/build/ace-server/ace-startup-script.sh
-          cp $PWD/demo-infrastructure/read-hashicorp-creds.sh /tmp/build/ace-server/
-          cp $PWD/demo-infrastructure/read-xml-creds.sh /tmp/build/ace-server/
-          cp tekton/os/cp4i/Dockerfile /tmp/build
 
       - name: Install docker
         run: |
