@@ -19,4 +19,8 @@ jobs:
         run: |
           set -e
           set -x
-          echo Hello
+          
+          git clone https://$GITOPS_GH_USER:$GITOPS_GH_TOKEN@github.com/trevor-dolby-at-ibm-com/ace-demo-gitops.git
+          cd ace-demo-gitops
+          git checkout autoPr/tea-demo-app 2>/dev/null || git checkout -b autoPr/tea-demo-app # Create branch if it does not exist
+          
