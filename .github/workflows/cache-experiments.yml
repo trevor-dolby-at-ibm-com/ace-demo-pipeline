@@ -92,6 +92,12 @@ jobs:
           mqsibar -w /tmp/build/home/aceuser/ace-server -a $PWD/tea-application-combined.bar
           ibmint optimize server --work-dir /tmp/build/home/aceuser/ace-server
 
+          cp demo-infrastructure/TEAJDBC.policyxml /tmp/build/home/aceuser/ace-server/
+          cp demo-infrastructure/application-overrides.txt /tmp/build/home/aceuser/ace-server/
+          cp demo-infrastructure/init-creds.sh /tmp/build/home/aceuser/ace-server/ace-startup-script.sh
+          cp demo-infrastructure/read-hashicorp-creds.sh /tmp/build/home/aceuser/ace-server/
+          cp demo-infrastructure/read-xml-creds.sh /tmp/build/home/aceuser/ace-server/
+
           export DATE=$(date '+%Y%m%d%H%M%S')
           export COMMIT=$(git log -1 --pretty=%h)
           export TAG="$DATE"-"$COMMIT"
@@ -128,3 +134,4 @@ jobs:
           echo Appending server contents tar file to create new image
           echo ========================================================================
           ~/ace/crane append -b tdolby/experimental:ace-minimal-13.0.1.0-ubuntu -f /tmp/build/crane-append-file.tar.gz -t tdolby/experimental:tea-github-action-crane-`cat /tmp/build/image-tag.txt`
+          ~/ace/crane mutate --entrypoint='bash,-c,". /opt/ibm/ace-13/server/bin/mqsiprofile && /home/aceuser/ace-server/ace-startup-script.sh && ibmint apply overrides /home/aceuser/ace-server/application-overrides.txt --work-directory /home/aceuser/ace-server && IntegrationServer -w /home/aceuser/ace-server --admin-rest-api -1 --no-nodejs && IntegrationServer -w /home/aceuser/ace-server"' tdolby/experimental:tea-github-action-crane-`cat /tmp/build/image-tag.txt`
