@@ -63,10 +63,47 @@ for creddir in ${CredsDir}/*; do
     fi
     echo "    ${CRED_NAME}:" >> ${TEMP_SECRETS_FILE}
     # Add more fields here as needed
-    CRED_USERNAME=$(cat $creddir/username)
-    CRED_PASSWORD=$(cat $creddir/password)
-    if [ "$CRED_USERNAME" != "" ]; then echo "      username: $CRED_USERNAME" >> ${TEMP_SECRETS_FILE}; fi
-    if [ "$CRED_PASSWORD" != "" ]; then echo "      password: $CRED_PASSWORD" >> ${TEMP_SECRETS_FILE}; fi
+    # This set came from /opt/ace-13.0.1.0/common/schemas/Credentials/Credentials.xsd
+    CRED_AUTHTYPE=$(cat $creddir/authType 2>/dev/null)
+    CRED_ACCESSKEYID=$(cat $creddir/accessKeyId 2>/dev/null)
+    CRED_ACCESSTOKEN=$(cat $creddir/accessToken 2>/dev/null)
+    CRED_APIKEY=$(cat $creddir/apiKey 2>/dev/null)
+    CRED_CLIENTEMAIL=$(cat $creddir/clientEmail 2>/dev/null)
+    CRED_CLIENTID=$(cat $creddir/clientId 2>/dev/null)
+    CRED_CLIENTSECRET=$(cat $creddir/clientSecret 2>/dev/null)
+    CRED_PASSPHRASE=$(cat $creddir/passphrase 2>/dev/null)
+    CRED_PASSWORD=$(cat $creddir/password 2>/dev/null)
+    CRED_PUBLICKEY=$(cat $creddir/publicKey 2>/dev/null)
+    CRED_PUBLICKEYID=$(cat $creddir/publicKeyId 2>/dev/null)
+    CRED_PRIVATEKEY=$(cat $creddir/privateKey 2>/dev/null)
+    CRED_PRIVATEKEYID=$(cat $creddir/privateKeyId 2>/dev/null)
+    CRED_REFRESHTOKEN=$(cat $creddir/refreshToken 2>/dev/null)
+    CRED_SECRETACCESSKEY=$(cat $creddir/secretAccessKey 2>/dev/null)
+    CRED_SSHIDENTITYFILE=$(cat $creddir/sshIdentityFile 2>/dev/null)
+    CRED_SSLPEERNAME=$(cat $creddir/sslPeerName 2>/dev/null)
+    CRED_USERNAME=$(cat $creddir/username 2>/dev/null)
+    CRED_WEBSPHEREUSERNAME=$(cat $creddir/websphereUsername 2>/dev/null)
+    CRED_WEBSPHEREPASSWORD=$(cat $creddir/webspherePassword 2>/dev/null)
+    if [ "${CRED_AUTHTYPE}" != "" ];          then echo "      authType: ${CRED_AUTHTYPE}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_ACCESSKEYID}" != "" ];       then echo "      accessKeyId: ${CRED_ACCESSKEYID}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_ACCESSTOKEN}" != "" ];       then echo "      accessToken: ${CRED_ACCESSTOKEN}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_APIKEY}" != "" ];            then echo "      apiKey: ${CRED_APIKEY}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_CLIENTEMAIL}" != "" ];       then echo "      clientEmail: ${CRED_CLIENTEMAIL}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_CLIENTID}" != "" ];          then echo "      clientId: ${CRED_CLIENTID}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_CLIENTSECRET}" != "" ];      then echo "      clientSecret: ${CRED_CLIENTSECRET}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_PASSPHRASE}" != "" ];        then echo "      passphrase: ${CRED_PASSPHRASE}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_PASSWORD}" != "" ];          then echo "      password: ${CRED_PASSWORD}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_PUBLICKEY}" != "" ];         then echo "      publicKey: ${CRED_PUBLICKEY}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_PUBLICKEYID}" != "" ];       then echo "      publicKeyId: ${CRED_PUBLICKEYID}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_PRIVATEKEY}" != "" ];        then echo "      privateKey: ${CRED_PRIVATEKEY}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_PRIVATEKEYID}" != "" ];      then echo "      privateKeyId: ${CRED_PRIVATEKEYID}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_REFRESHTOKEN}" != "" ];      then echo "      refreshToken: ${CRED_REFRESHTOKEN}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_SECRETACCESSKEY}" != "" ];   then echo "      secretAccessKey: ${CRED_SECRETACCESSKEY}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_SSHIDENTITYFILE}" != "" ];   then echo "      sshIdentityFile: ${CRED_SSHIDENTITYFILE}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_SSLPEERNAME}" != "" ];       then echo "      sslPeerName: ${CRED_SSLPEERNAME}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_USERNAME}" != "" ];          then echo "      username: ${CRED_USERNAME}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_WEBSPHEREUSERNAME}" != "" ]; then echo "      websphereUsername: ${CRED_WEBSPHEREUSERNAME}" >> ${TEMP_SECRETS_FILE}; fi
+    if [ "${CRED_WEBSPHEREPASSWORD}" != "" ]; then echo "      webspherePassword: ${CRED_WEBSPHEREPASSWORD}" >> ${TEMP_SECRETS_FILE}; fi
 done
 
 # Print out the set of credentials found
@@ -78,3 +115,4 @@ fi
 
 # Remove copies
 rm -rf ${TEMP_SECRETS_DIR}
+
