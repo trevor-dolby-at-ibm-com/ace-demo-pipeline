@@ -128,9 +128,10 @@
 	    <configuration>
 	      <executable>../scripts/create-and-populate-work-dir.sh</executable>
 	      <arguments>
-		<argument>/tmp/mvn-test-work-dir</argument>
-		<argument>../TeaSharedLibrary/tea-shlib.bar</argument>
-		<argument>../TeaRESTApplication/tea.bar</argument>
+			<argument>/tmp/mvn-test-work-dir</argument>
+			<argument>../TeaSharedLibrary/tea-shlib.bar</argument>
+			<argument>../TeaRESTApplication/tea.bar</argument>
+			<argument>../TeaCallableApplicationV2/tea-callable-v2.bar</argument>
 	      </arguments>
 	    </configuration>
 	  </execution>
@@ -140,11 +141,11 @@
 	    <configuration>
 	      <executable>mqsibar</executable>
 	      <arguments>
-		<argument>-c</argument>
-		<argument>-w</argument>
-		<argument>/tmp/mvn-test-work-dir</argument>
-		<argument>-a</argument>
-		<argument>tea-unit-tests.bar</argument>
+			<argument>-c</argument>
+			<argument>-w</argument>
+			<argument>/tmp/mvn-test-work-dir</argument>
+			<argument>-a</argument>
+			<argument>tea-unit-tests.bar</argument>
 	      </arguments>
 	    </configuration>
 	  </execution>
@@ -154,13 +155,13 @@
 	    <configuration>
 	      <executable>ibmint</executable>
 	      <arguments>
-		<argument>optimize</argument>
-		<argument>server</argument>
-		<argument>--work-dir</argument>
-		<argument>/tmp/mvn-test-work-dir</argument>
+			<argument>optimize</argument>
+			<argument>server</argument>
+			<argument>--work-dir</argument>
+			<argument>/tmp/mvn-test-work-dir</argument>
                 <!-- Not going to be using the REST API remotely -->
-		<argument>--disable</argument>
-		<argument>NodeJS</argument>
+			<argument>--disable</argument>
+			<argument>NodeJS</argument>
 	      </arguments>
 	    </configuration>
 	  </execution>
@@ -170,15 +171,15 @@
 	    <configuration>
 	      <executable>IntegrationServer</executable>
 	      <arguments>
-		<argument>-w</argument>
-		<argument>/tmp/mvn-test-work-dir</argument>
-		<argument>--no-nodejs</argument>
-		<argument>--admin-rest-api</argument>
-		<argument>-1</argument>
-		<argument>--test-junit-options</argument>
-		<argument>--reports-dir=maven-reports</argument>
-		<argument>--test-project</argument>
-		<argument>TeaRESTApplication_UnitTest</argument>
+			<argument>-w</argument>
+			<argument>/tmp/mvn-test-work-dir</argument>
+			<argument>--no-nodejs</argument>
+			<argument>--admin-rest-api</argument>
+			<argument>-1</argument>
+			<argument>--test-junit-options</argument>
+			<argument>--reports-dir=maven-reports</argument>
+			<argument>--test-project</argument>
+			<argument>TeaRESTApplication_UnitTest</argument>
 	      </arguments>
 	    </configuration>
 	  </execution>

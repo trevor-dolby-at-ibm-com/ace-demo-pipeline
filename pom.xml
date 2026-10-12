@@ -12,6 +12,7 @@
     <module>TeaSharedLibraryJava</module>
     <module>TeaSharedLibrary</module>
     <module>TeaRESTApplication</module>
+    <module>TeaCallableApplicationV2</module>
     <module>TeaRESTApplication_UnitTest</module>
     <module>demo-infrastructure</module>
   </modules>
