@@ -158,13 +158,13 @@ jobs:
           echo Creating ${APPCON_DEPLOY_PREFIX}-jdbc-policies configuration
           echo ========================================================================
           mkdir /tmp/JDBCPolicies
-          cat demo-infrastructure/TEAJDBC.policyxml | sed 's/DATABASE_NAME/${JDBC_DATABASE_NAME}/g' > /tmp/JDBCPolicies/TEAJDBC.policyxml
-          sed -i 's/SERVER_NAME/${JDBC_HOSTNAME}/g' /tmp/JDBCPolicies/TEAJDBC.policyxml
-          sed -i 's/PORT_NUMBER/${JDBC_PORT}/g' /tmp/JDBCPolicies/TEAJDBC.policyxml
+          cat demo-infrastructure/TEAJDBC.policyxml | sed "s/DATABASE_NAME/${JDBC_DATABASE_NAME}/g" > /tmp/JDBCPolicies/TEAJDBC.policyxml
+          sed -i "s/SERVER_NAME/${JDBC_HOSTNAME}/g" /tmp/JDBCPolicies/TEAJDBC.policyxml
+          sed -i "s/PORT_NUMBER/${JDBC_PORT}/g" /tmp/JDBCPolicies/TEAJDBC.policyxml
           echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><ns2:policyProjectDescriptor xmlns="http://com.ibm.etools.mft.descriptor.base" xmlns:ns2="http://com.ibm.etools.mft.descriptor.policyProject"><references/></ns2:policyProjectDescriptor>' > /tmp/JDBCPolicies/policy.descriptor
           cat /tmp/JDBCPolicies/TEAJDBC.policyxml
           # Using "zip" would be more obvious, but not all ACE images have it available.
-          (cd /tmp && /opt/ibm/ace-13/common/jdk/bin/jar cvf /tmp/JDBCPolicies.zip JDBCPolicies)
+          (cd /tmp && jar cvf /tmp/JDBCPolicies.zip JDBCPolicies)
           bash scripts/ace-saas-cli.sh upload configuration ${APPCON_DEPLOY_PREFIX}-jdbc-policies policyproject "JDBC policies for ${APPCON_DEPLOY_PREFIX} Tea app" /tmp/JDBCPolicies.zip
 
           echo ========================================================================
