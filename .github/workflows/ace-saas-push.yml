@@ -13,6 +13,12 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      create_config:
+        description: 'True to create IR and JDBC config (requires JDBC* secrets)'
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   # This workflow contains a single job called "build"
@@ -90,7 +96,7 @@ jobs:
 
           # Fix for ace-minimal-build and curl
           unset LD_LIBRARY_PATH
-          
+
           set -e # Fail on error - this must be done after the profile in case the container has the profile loaded already
           #set -x # Debugging
 
