@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: cp.icr.io/cp/appc/ace:13.0.4.0-r1
+      image: cp.icr.io/cp/appc/ace:13.0.7.0-r1
       credentials:
         username: ${{ secrets.CP_USERNAME }}
         password: ${{ secrets.CP_PASSWORD }}
@@ -44,7 +44,7 @@ jobs:
           echo "Loading ACE profile"
           export LICENSE=accept
           set +e # Don't fail on error if the profile has already been loaded
-          . /opt/ibm/ace-12/server/bin/mqsiprofile
+          . /opt/ibm/ace-13/server/bin/mqsiprofile
           set -e # Fail on error - this must be done after the profile in case the container has the profile loaded already
 
           echo ========================================================================
@@ -72,7 +72,7 @@ jobs:
           echo "Loading ACE profile"
           export LICENSE=accept
           set +e # Don't fail on error if the profile has already been loaded
-          . /opt/ibm/ace-12/server/bin/mqsiprofile
+          . /opt/ibm/ace-13/server/bin/mqsiprofile
           set -e # Fail on error - this must be done after the profile in case the container has the profile loaded already
           rm -rf /tmp/build
           mkdir -p /tmp/build
@@ -127,4 +127,4 @@ jobs:
           echo ========================================================================
           echo Appending server contents tar file to create new image
           echo ========================================================================
-          crane append -b cp.icr.io/cp/appc/ace-server-prod:13.0.4.0-r1-20250621-111331 -f /tmp/build/crane-append-file.tar.gz -t tdolby/experimental:tea-github-action-crane-`cat /tmp/build/image-tag.txt`
+          crane append -b cp.icr.io/cp/appc/ace-server-prod:13.0.7.0-r1-20260330-205212 -f /tmp/build/crane-append-file.tar.gz -t tdolby/experimental:tea-github-action-crane-`cat /tmp/build/image-tag.txt`
