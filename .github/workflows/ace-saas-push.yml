@@ -100,55 +100,86 @@ jobs:
           set -e # Fail on error - this must be done after the profile in case the container has the profile loaded already
           #set -x # Debugging
 
+          # The script relies on the environment variables for SaaS endpoint credentials
+          bash scripts/ace-saas-cli.sh get token /tmp/APPCON_TOKEN
+          export APPCON_TOKEN=`cat /tmp/APPCON_TOKEN`
+
+          bash scripts/ace-saas-cli.sh upload bar tdolby-tea-application tea-application-combined.bar bar-url.txt
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: bar-url.txt
+          path: bar-url.txt
+
+  config:
+    needs: deploy
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v7
+
+      # 2. Download the artifact to the new runner
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: bar-url.txt
+
+      - name: Create config
+        shell: bash
+        env:
+          APPCON_ENDPOINT:       ${{ vars.APPCON_ENDPOINT }}
+          APPCON_DEPLOY_PREFIX:  ${{ vars.APPCON_DEPLOY_PREFIX }}
+          APPCON_INSTANCE_ID:    ${{ secrets.APPCON_INSTANCE_ID }}
+          APPCON_CLIENT_ID:      ${{ secrets.APPCON_CLIENT_ID }}
+          APPCON_CLIENT_SECRET:  ${{ secrets.APPCON_CLIENT_SECRET }}
+          APPCON_API_KEY:        ${{ secrets.APPCON_API_KEY }}
+          JDBC_DATABASE_NAME:    ${{ vars.JDBC_DATABASE_NAME }}
+          JDBC_HOSTNAME:         ${{ vars.JDBC_HOSTNAME }}
+          JDBC_PORT:             ${{ vars.JDBC_PORT }}
+          JDBC_USERNAME:         ${{ secrets.JDBC_USERNAME }}
+          JDBC_PASSWORD:         ${{ secrets.JDBC_PASSWORD }}
+        run: |
+          echo "Creating configuration for ${APPCON_ENDPOINT}"
+
+          # Fix for ace-minimal-build and curl
+          unset LD_LIBRARY_PATH
+
+          set -e # Fail on error - this must be done after the profile in case the container has the profile loaded already
+          #set -x # Debugging
 
           # The script relies on the environment variables for SaaS endpoint credentials
           bash scripts/ace-saas-cli.sh get token /tmp/APPCON_TOKEN
           export APPCON_TOKEN=`cat /tmp/APPCON_TOKEN`
 
-          bash scripts/ace-saas-cli.sh upload bar tdolby-tea-application tea-application-combined.bar /tmp/BARURL
 
-          exit 0
+          echo ========================================================================
+          echo Creating ${APPCON_DEPLOY_PREFIX}-jdbc-policies configuration
+          echo ========================================================================
+          mkdir /tmp/JDBCPolicies
+          cat demo-infrastructure/TEAJDBC.policyxml | sed 's/DATABASE_NAME/${JDBC_DATABASE_NAME}/g' > /tmp/JDBCPolicies/TEAJDBC.policyxml
+          sed -i 's/SERVER_NAME/${JDBC_HOSTNAME}/g' /tmp/JDBCPolicies/TEAJDBC.policyxml
+          sed -i 's/PORT_NUMBER/${JDBC_PORT}/g' /tmp/JDBCPolicies/TEAJDBC.policyxml
+          echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><ns2:policyProjectDescriptor xmlns="http://com.ibm.etools.mft.descriptor.base" xmlns:ns2="http://com.ibm.etools.mft.descriptor.policyProject"><references/></ns2:policyProjectDescriptor>' > /tmp/JDBCPolicies/policy.descriptor
+          cat /tmp/JDBCPolicies/TEAJDBC.policyxml
+          # Using "zip" would be more obvious, but not all ACE images have it available.
+          (cd /tmp && /opt/ibm/ace-13/common/jdk/bin/jar cvf /tmp/JDBCPolicies.zip JDBCPolicies)
+          bash scripts/ace-saas-cli.sh upload configuration ${APPCON_DEPLOY_PREFIX}-jdbc-policies policyproject "JDBC policies for ${APPCON_DEPLOY_PREFIX} Tea app" /tmp/JDBCPolicies.zip
 
-          echo "########################################################################"
-          echo "# Checking for IntegrationRuntime"
-          echo "########################################################################" && echo
-          # Avoid failing immediately if the grep commands find errors
-          set +e
-          curl -s https://${APPCON_ENDPOINT}/api/v1/integration-runtimes/${APPCON_DEPLOY_PREFIX}-rest-call-ir \
-            -H "x-ibm-instance-id: ${APPCON_INSTANCE_ID}" -H "Content-Type: application/octet-stream" \
-            -H "Accept: application/json" -H "X-IBM-Client-Id: ${APPCON_CLIENT_ID}" -H "authorization: Bearer `cat /tmp/APPCON_TOKEN`" \
-            --output /tmp/curl-output.txt
-          #cat /tmp/curl-output.txt ; echo
-          # Check for 404 Not Found
-          grep -q '"Internal error","code":404' /tmp/curl-output.txt
-          if [ "$?" != "0" ]; then
-              # IR found or else another error
-              # Look for an expected string to check for a valid IR
-              grep -q supportsTraceCustomResource /tmp/curl-output.txt
-              if [ "$?" != "0" ]; then
-                echo "########################################################################"
-                echo "# Error detecting ACEaaS IR"
-                echo "########################################################################" && echo
-                cat /tmp/curl-output.txt
-                exit 1
-              fi
-              echo "########################################################################"
-              echo "# Found existing IR"
-              echo "########################################################################" && echo
-          else
-            echo "########################################################################"
-            echo "# Creating IntegrationRuntime JSON"
-            echo "########################################################################" && echo
-            set -e
-            cp extensions/create-integrationruntime-template.json /tmp/create-integrationruntime.json
-            sed -i "s/TEMPLATE_NAME/${APPCON_DEPLOY_PREFIX}-rest-call-ir/g" /tmp/create-integrationruntime.json
-            # Backslash issues - the effect is to escape / characters in the URL data to avoid issues with sed
-            sed -i "s/TEMPLATE_BARURL/`cat /tmp/BARURL | sed 's|/|\\\\/|g'`/g" /tmp/create-integrationruntime.json
-            echo "Contents of create-integrationruntime.json:"
-            cat /tmp/create-integrationruntime.json
+          echo ========================================================================
+          echo Creating jdbc::tea as ${APPCON_DEPLOY_PREFIX}-jdbc-setdbparms configuration
+          echo ========================================================================
+          echo -n jdbc::tea ${JDBC_USERNAME} ${JDBC_PASSWORD} > /tmp/jdbc-setdbparms.txt
+          bash scripts/ace-saas-cli.sh upload configuration ${APPCON_DEPLOY_PREFIX}-jdbc-setdbparms setdbparms "JDBC credentials for ${APPCON_DEPLOY_PREFIX} Tea app" /tmp/jdbc-setdbparms.txt
 
-            curl -s --fail-with-body -X PUT https://${APPCON_ENDPOINT}/api/v1/integration-runtimes/${APPCON_DEPLOY_PREFIX}-rest-call-ir \
-              -H "x-ibm-instance-id: ${APPCON_INSTANCE_ID}" -H "Content-Type: application/json" \
-              -H "Accept: application/json" -H "X-IBM-Client-Id: ${APPCON_CLIENT_ID}" -H "authorization: Bearer `cat /tmp/APPCON_TOKEN`" \
-              --data-binary @/tmp/create-integrationruntime.json
-          fi
+          echo ========================================================================
+          echo Creating default policy project setting as ${APPCON_DEPLOY_PREFIX}-default-policy-project configuration
+          echo ========================================================================
+          (echo "Defaults:" && echo "  policyProject: 'JDBCPolicies'") > /tmp/default-policy-project.txt
+          bash scripts/ace-saas-cli.sh upload configuration ${APPCON_DEPLOY_PREFIX}-default-policy-project serverconf "Default policy project for ${APPCON_DEPLOY_PREFIX} Tea app" /tmp/default-policy-project.txt
+
+          echo ========================================================================
+          echo Creating IntegrationRuntime JSON
+          echo ========================================================================
+          bash scripts/ace-saas-cli.sh create ir ${APPCON_DEPLOY_PREFIX}-tea-gh-actions-ir `cat bar-url.txt` ${APPCON_DEPLOY_PREFIX}-default-policy-project ${APPCON_DEPLOY_PREFIX}-jdbc-setdbparms ${APPCON_DEPLOY_PREFIX}-jdbc-policies
