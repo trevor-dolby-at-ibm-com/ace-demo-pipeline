@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+#
+# Copyright (c) 2026 Open Technologies for Integration
+# Licensed under the MIT license (see LICENSE for details)
+#
+
 # ---------------------------------------------------------------------------
 # Argument / environment variable parsing and command dispatch
 #
