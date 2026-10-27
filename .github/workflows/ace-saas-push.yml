@@ -108,7 +108,7 @@ jobs:
           bash scripts/ace-saas-cli.sh get token /tmp/APPCON_TOKEN
           export APPCON_TOKEN=`cat /tmp/APPCON_TOKEN`
 
-          bash scripts/ace-saas-cli.sh upload bar tdolby-tea-application tea-application-combined.bar bar-url.txt
+          bash scripts/ace-saas-cli.sh upload bar ${APPCON_DEPLOY_PREFIX}-tea-application tea-application-combined.bar bar-url.txt
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v7
@@ -186,4 +186,4 @@ jobs:
           echo ========================================================================
           echo Creating IntegrationRuntime JSON
           echo ========================================================================
-          bash scripts/ace-saas-cli.sh create ir ${APPCON_DEPLOY_PREFIX}-tea-gh-actions-ir `cat bar-url.txt` ${APPCON_DEPLOY_PREFIX}-default-policy-project ${APPCON_DEPLOY_PREFIX}-jdbc-setdbparms ${APPCON_DEPLOY_PREFIX}-jdbc-policies
+          bash scripts/ace-saas-cli.sh create ir ${APPCON_DEPLOY_PREFIX}-tea-gh-actions-ir `cat bar-url.txt` ${APPCON_DEPLOY_PREFIX}-default-policy-project ${APPCON_DEPLOY_PREFIX}-jdbc-setdbparms ${APPCON_DEPLOY_PREFIX}-jdbc-policies default-switch-server-privatenetworkagent
