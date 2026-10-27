@@ -70,6 +70,15 @@ https://www.ibm.com/docs/en/wm-integration-ipaas?topic=reference-authenticating-
 `IWHI_WM_HOSTNAME` should be set to the base address of the instance (e.g., 
 "dev2299223.a-vir-r1.int.ipaas.automation.ibm.com").
 
+## Testing with curl
+
+Testing with curl requires the API key and the public URL from the "API details" page, at which 
+point it can be run as follows:
+```
+curl -H "X-INSTANCE-API-KEY: APIKEY"  'https://dev6610096.a-fra-c1.int.ipaas.automation.ibm.com/integration/restv2/development/fl96713b506d80bc1e63404c/TeaAPI/index/2'
+```
+The "/index/2" should be added to the end of the public URL for the GET method.
+
 ## Issues with missing capabilities
 
 Errors of the form
